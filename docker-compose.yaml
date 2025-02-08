@@ -1,0 +1,38 @@
+services:
+  catalogs_web:
+    build: 
+      context: ./catalogs_web
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./catalogs_web:/app
+      - /app/node_modules
+    environment:
+      - API_URL=http://localhost:8000
+    depends_on:
+      - catalogs_api
+
+  catalogs_api:
+    build:
+      context: ./catalogs_api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./catalogs_api:/app
+      - /app/.venv
+    environment:
+      - MONGODB_URL=mongodb://catalogs_db:27017
+    depends_on:
+      - catalogs_db
+
+  catalogs_db:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
