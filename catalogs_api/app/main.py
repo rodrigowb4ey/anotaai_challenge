@@ -3,6 +3,7 @@ from fastapi import FastAPI
 app = FastAPI()
 
 
-@app.get("/")
+@app.get('/')
 def read_root() -> dict[str, str]:
-    return {"Hello": "World"}
+    """Root endpoint for the API."""
+    return {'Hello': 'World'}
