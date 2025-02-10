@@ -6,12 +6,20 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi[standard]>=0.115.8",
+    "motor>=3.7.0",
+    "passlib[bcrypt]>=1.7.4",
+    "pydantic-settings>=2.7.1",
+    "pydantic[email]>=2.10.6",
+    "python-jose[cryptography]>=3.3.0",
+    "python-multipart>=0.0.20",
 ]
 
 [dependency-groups]
 dev = [
     "mypy>=1.15.0",
     "ruff>=0.9.5",
+    "types-passlib>=1.7.7.20241221",
+    "types-python-jose>=3.3.4.20240106",
 ]
 
 [tool.ruff]
@@ -30,6 +38,7 @@ select = ["ALL"]
 ignore = ["D100", "D104", "D203", "D213", "D401", "D406", "D407", "D413", "COM812", "ISC001", "Q000", "Q003"]
 
 [tool.mypy]
+python_version = "3.12"
 follow_imports = "normal"
 warn_unused_configs = true
 show_column_numbers = true
