@@ -6,5 +6,5 @@ format:
 	ruff format .
 
 lint:
-	ruff check .
+	ruff check . --fix
 	mypy --show-error-context --pretty .

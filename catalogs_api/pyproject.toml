@@ -35,7 +35,7 @@ skip-magic-trailing-comma = false
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["D100", "D104", "D203", "D213", "D401", "D406", "D407", "D413", "COM812", "ISC001", "Q000", "Q003"]
+ignore = ["D100", "D104", "D203", "D213", "D401", "D406", "D407", "D413", "COM812", "ISC001", "Q000", "Q003", "TRY003", "EM101"]
 
 [tool.mypy]
 python_version = "3.12"
