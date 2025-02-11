@@ -20,7 +20,7 @@ async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
     """Login user."""
-    user_dict = await db.users.find_one({'email': form_data.username})
+    user_dict = await db['users'].find_one({'email': form_data.username})
     if not user_dict:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -50,7 +50,7 @@ async def register(
     db: Annotated[AsyncIOMotorDatabase[Any], Depends(get_database)],
 ) -> UserResponse:
     """Register new user."""
-    existing_user = await db.users.find_one({'email': user_in.email})
+    existing_user = await db['users'].find_one({'email': user_in.email})
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -63,7 +63,9 @@ async def register(
         full_name=user_in.full_name,
     )
 
-    result = await db.users.insert_one(user.model_dump(by_alias=True))
+    # Convert model to dict but exclude id since MongoDB will generate it
+    user_dict = user.model_dump(by_alias=True, exclude={'id'})
+    result = await db['users'].insert_one(user_dict)
     user.id = str(result.inserted_id)
 
     return UserResponse(
