@@ -17,16 +17,18 @@ db = MongoDB()
 async def get_database() -> AsyncIOMotorDatabase[Any]:
     """Get the database."""
     if db.client is None:
-        raise RuntimeError('Database client is not initialized')
+        raise RuntimeError('Database is not initialized')
     return db.client[settings.DATABASE_NAME]
 
 
 async def connect_to_mongo() -> None:
     """Connect to MongoDB."""
-    db.client = AsyncIOMotorClient(settings.MONGODB_URL)
+    if db.client is None:
+        db.client = AsyncIOMotorClient(settings.MONGODB_URL)
 
 
 async def close_mongo_connection() -> None:
     """Close the MongoDB connection."""
     if db.client is not None:
         db.client.close()
+        db.client = None

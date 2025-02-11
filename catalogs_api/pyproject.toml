@@ -17,9 +17,13 @@ dependencies = [
 [dependency-groups]
 dev = [
     "mypy>=1.15.0",
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.4",
     "ruff>=0.9.5",
     "types-passlib>=1.7.7.20241221",
     "types-python-jose>=3.3.4.20240106",
+    "pytest-asyncio>=0.25.3",
+    "mongomock-motor>=0.0.35",
 ]
 
 [tool.ruff]
@@ -37,6 +41,9 @@ skip-magic-trailing-comma = false
 select = ["ALL"]
 ignore = ["D100", "D104", "D203", "D213", "D401", "D406", "D407", "D413", "COM812", "ISC001", "Q000", "Q003", "TRY003", "EM101"]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]
+
 [tool.mypy]
 python_version = "3.12"
 follow_imports = "normal"
@@ -45,4 +52,29 @@ show_column_numbers = true
 show_error_codes = true
 strict = true
 plugins = ["pydantic.mypy"]
-files = ["app/**/*.py"]
+files = ["app/**/*.py", "tests/**/*.py"]
+
+[[tool.mypy.overrides]]
+module = "mongomock_motor.*"
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "--strict-config --cov-report=term-missing --no-cov-on-fail --cov=app"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+filterwarnings = [
+  "ignore::DeprecationWarning:passlib.*:",
+  "ignore::DeprecationWarning:bcrypt.*:",
+  "ignore::pydantic.warnings.PydanticDeprecatedSince20",
+]
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "if (typing\\.)?TYPE_CHECKING:",
+  "@abstractmethod",
+  "case _ as unreachable:"
+]
